@@ -1,29 +1,19 @@
 version: 3
 images:
   base_image:
-    name: quay.io/fedora/fedora:latest
+    name: ghcr.io/ansible-community/community-ee-base:latest
 dependencies:
   ansible_core:
     package_pip: ansible-core==2.20.0
   ansible_runner:
     package_pip: ansible-runner
+  python:
+    - podman
+    - requests
   system:
-    - openssh-clients
-    - less
-    - gcc
-    - python3-devel
-    - libvirt-devel
-    - pkg-config
-    - make
-  galaxy:
-    collections:
-    - name: ansible.posix
-      version: 2.1.0
-    - name: ansible.utils
-      version: 6.0.0
-    - name: ansible.windows
-      version: 3.2.0
-
-additional_build_steps:
-  prepend_base:
-    - RUN dnf install -y python3 python3-pip python3-libdnf5
+    - podman
+    - buildah
+    - skopeo
+    - git
+    - tar
+  galaxy: requirements.yml

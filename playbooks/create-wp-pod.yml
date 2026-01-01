@@ -1,0 +1,31 @@
+---
+- name: Create Podman for WordPress
+  hosts: localhost
+  become: true
+  collections:
+    - containers.podman
+
+  tasks:
+
+    - name: Ensure Podman is installed on host
+      ansible.builtin.package:
+        name: podman
+        state: present
+
+    - name: Pull WordPress image
+      containers.podman.podman_image:
+        name: docker.io/library/wordpress
+        tag: latest
+
+    - name: Create a Podman container
+      containers.podman.podman_container:
+        name: wp_site
+        image: docker.io/library/wordpress:latest
+        state: started
+        ports:
+          - "8080:80"
+        env:
+          WORDPRESS_DB_HOST: db
+          WORDPRESS_DB_NAME: wp
+          WORDPRESS_DB_USER: wpuser
+          WORDPRESS_DB_PASSWORD: wppass

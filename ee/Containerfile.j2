@@ -1,0 +1,31 @@
+FROM {{ image }}
+
+USER root
+
+# Ensure package list exists and install requirements
+RUN microdnf install -y \
+    libvirt \
+    libvirt-client \
+    libvirt-daemon \
+    qemu-kvm \
+    qemu-img \
+    virt-install \
+    virt-manager \
+    genisoimage \
+    cloud-utils \
+    podman \
+    python3-libvirt \
+    python3-lxml \
+    python3-yaml \
+    python3-requests \
+    python3-psutil \
+    git \
+    openssh-clients \
+    && microdnf clean all
+
+# Ensure libvirt sockets & groups exist (EE container only needs client mode)
+RUN groupadd -f libvirt && \
+    usermod -aG libvirt ansible
+
+USER ansible
+
